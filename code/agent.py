@@ -148,8 +148,8 @@ class Agent:
         """
         Logs messages received from other agents for testing and debugging.
         """
-        self.log(f"Response: {time.time()}")
-        #self.log(f"Received message from {ip}: {message}")
+        #self.log(f"Response: {time.time()}")
+        self.log(f"Received message from {ip}: {message}")
     
     def handle_echo(self, type, message, ip):
         """

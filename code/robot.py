@@ -1,4 +1,4 @@
-from robomaster import robot
+#from robomaster import robot
 import cv2
 import threading
 from marker_detector import MarkerDetector
@@ -20,7 +20,7 @@ class Robot:
         Initializes the computer vision modules LineDetector and MarkerDetector as well as the RouteNavigator module.
         """
         self.log = log
-        self.ep_robot = robot.Robot()
+        #self.ep_robot = robot.Robot()
         self.line_detector = LineDetector()
         self.marker_detector = MarkerDetector()
         self.drive_controller = DriveController(self.ep_robot)
@@ -36,9 +36,9 @@ class Robot:
         """
         Establishes a connection to the robot through the Wi-Fi network and initializes the cmaera stream.
         """
-        self.ep_robot.initialize(conn_type="sta")
-        self.ep_camera = self.ep_robot.camera
-        self.ep_camera.start_video_stream(display=False)
+        #self.ep_robot.initialize(conn_type="sta")
+        #self.ep_camera = self.ep_robot.camera
+        #self.ep_camera.start_video_stream(display=False)
 
     def prepare_move(self, target):
         """
