@@ -1,4 +1,5 @@
 import networkx as nx
+#print(nx.__file__)
 from route_navigator import RouteNavigator
 
 class PathPlanner:

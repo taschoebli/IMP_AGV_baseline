@@ -1,6 +1,6 @@
 from communication_handler import CommunicationHandler
 from path_planner import PathPlanner
-from robot import Robot
+#from robot import Robot
 from mock_robot import MockRobot
 import time
 
