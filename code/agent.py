@@ -118,9 +118,8 @@ class Agent:
         Upon notification from another agent the agent porcesses its subtask and passes commands to the robot.
         """
 
-        self.log(f"Agent begins task completion..")
-
         for task_idx, task in enumerate(self.scheduled_tasks):
+            self.log(f"Agent begins task completion..")
             self.clock = task["start_time"]
             path = task["path"]
             num_nodes = len(path)
