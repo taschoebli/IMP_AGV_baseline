@@ -9,7 +9,7 @@ class CommunicationHandler:
     The CommunicationHandler class is responsible for communicating with other agents in the same cell as well as with the
     WMS. It is capable of communicating with the use of Sockets in a multicast as well as sending direct messages to other peers
     """
-
+    LOCAL_IP = '8.8.8.8'
     MULTICAST_IP = '224.1.1.1'
     PORT = 5004
     INTERVAL = 5
@@ -42,7 +42,7 @@ class CommunicationHandler:
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            s.connect(('192.168.1.1', 80))
+            s.connect((self.LOCAL_IP, 80)) # Use that IP, well known public IP instead of local routers IP
             local_ip = s.getsockname()[0]
         except Exception:
             local_ip = '127.0.0.1'
@@ -91,7 +91,7 @@ class CommunicationHandler:
         except Exception:
             print(f"An error uccured while sending multicast message")
 
-    
+
     def send(self, address, type, payload):
         """
         Sends messages directly to other peers
@@ -102,7 +102,7 @@ class CommunicationHandler:
         except Exception:
             print(f"Error sending message to {address}")
 
-    
+
     def get_peers(self):
         """
         Returns all discovered peers
@@ -123,7 +123,7 @@ class CommunicationHandler:
         Executes the suiting functions based on the message type
         """
         self.subscriptions[type](type, message, ip)
-    
+
     
     def handle_discover_peer(self, type, message, ip):
         """
@@ -133,7 +133,7 @@ class CommunicationHandler:
             if ip != self.ip and ip not in self.peers:
                 self.peers.add(ip)
                 self.dicover_peer_callback(ip)
-    
+
 
     def serialize_message(self, type, message, address):
        """

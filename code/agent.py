@@ -90,8 +90,9 @@ class Agent:
         else:
             selected_option = self.path_planner.get_worst_option(options)
         self.comm_handler.send_multicast("TASK_DISTRIBUTION", selected_option)
-        time.sleep(1)
-        self.comm_handler.send(selected_option[0]["name"], "EXECUTE_TASK", True)
+        #time.sleep(4)
+        #self.comm_handler.send(selected_option[0]["name"], "EXECUTE_TASK", True)
+        self.comm_handler.send_multicast("EXECUTE_TASK", True)
         return selected_option
     
     def handle_task_distribution(self, type, task_list, ip):
@@ -114,15 +115,22 @@ class Agent:
         """
         Upon notification from another agent the agent porcesses its subtask and passes commands to the robot.
         """
-        self.log(f"Received task completion from {ip}")
-        if len(self.scheduled_tasks) == 0 and self.is_coordinator:
-            self.log("All tasks completed.")
+
+        self.log(f"Agent begins task completion..")
+
         for task_idx, task in enumerate(self.scheduled_tasks):
             self.clock = task["start_time"]
+            path = task["path"]
+            num_nodes = len(path)
+            last_node_index = num_nodes - 1
+            second_last_node_index = num_nodes - 2
+            scheduled_task_count = len(self.scheduled_tasks)
+
             if task["task"]=="MOVE":
+                self.log("----------------Start Moving----------------------")
                 pointer = 0
-                while pointer<len(task["path"])-1:
-                    if pointer==len(task["path"])-2 and len(self.scheduled_tasks)>task_idx+1 and self.scheduled_tasks[task_idx+1]["task"]=="TRANSPORT":
+                while pointer < last_node_index:
+                    if pointer==second_last_node_index and scheduled_task_count>task_idx+1 and self.scheduled_tasks[task_idx+1]["task"]=="TRANSPORT":
                         self.robot.prepare_pickup(task["path"][pointer+1])
                     else:
                         self.robot.prepare_move(task["path"][pointer+1])
@@ -130,12 +138,13 @@ class Agent:
                     self.increase_clock(self.MOVE_DURATION + task["turn_time_per_node"][task["path"][pointer]])
                     pointer += 1
             if task["task"]=="TRANSPORT":
+                self.log("----------------Start Transporting----------------")
                 self.increase_clock(self.PICKUP_DURATION)
                 pointer = 0
                 while pointer<len(task["path"])-1:
                     if pointer==len(task["path"])-2:
                         self.robot.prepare_dropoff(task["path"][pointer+1])
-                        self.all_locations[self.comm_handler.ip] = {"node": task["path"][pointer], "facing_direction": task["last_facing_direction"]}
+                        self.all_locations[self.comm_handler.ip] = {"node": task["path"][pointer+1], "facing_direction": task["last_facing_direction"]}
                     else:
                         self.robot.prepare_move(task["path"][pointer+1])
                         self.all_locations[self.comm_handler.ip] = {"node": task["path"][pointer+1], "facing_direction": task["last_facing_direction"]}
