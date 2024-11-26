@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from communication_handler import CommunicationHandler
 from path_planner import PathPlanner
 #from robot import Robot
@@ -57,7 +59,7 @@ class Agent:
         """
         Logs messages to the console with specifying the own local ip
         """
-        print(f"{self.comm_handler.ip}: {message}")
+        print(f"{datetime.now().strftime('%H:%M:%S')} {self.comm_handler.ip} {message}")
     
     def handle_discover_peer(self, ip):
         """
