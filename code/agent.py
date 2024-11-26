@@ -47,7 +47,6 @@ class Agent:
         self.all_locations[self.comm_handler.ip] = {"node": self.location, "facing_direction": self.robot_facing_direction}
         self.path_planner = PathPlanner(edges, pos, durations)
         self.log(f"Agent initialized and is coordinator={is_coordinator}")
-        self.log("Agent initialized.")
 
     
     def get_peers(self):
